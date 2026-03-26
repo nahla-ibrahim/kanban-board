@@ -1,0 +1,12 @@
+<div class="bg-linear-to-br from-sky-900 to-sky-50 p-5 min-h-screen min-w-screen overflow-scroll" cdkDropListGroup>
+  <div class="flex gap-4" 
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  (cdkDropListDropped)="drop($event)">
+    @for (list of lists(); track $index) {
+      <app-list [listData]="list" (updateListData)="updateListData($event)" (dropTask)="dropTask($event)" [connectedList]="connectedList" cdkDrag />
+    }
+    <app-add-new-list (addList)="addNewList($event)" />
+  </div>
+  
+</div>

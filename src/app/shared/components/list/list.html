@@ -1,0 +1,26 @@
+<div class="bg-slate-100 rounded-lg w-60 p-3 cursor-move" (clickOutside)="setTaskTitleInput(false)">
+  <h3 class="text-xl font-semibold">{{listData().title}}</h3>
+  <div class="mt-4">
+    <div
+      [id]="listData().id"
+      cdkDropList
+      [cdkDropListConnectedTo]="this.connectedList()"
+      [cdkDropListData]="listData().tasks"
+      (cdkDropListDropped)="dropTask.emit($event)" 
+      class="min-h-3">
+      @for (task of listData().tasks; track $index) {
+        <app-single-task [taskData]="task" (deleteTask)="deleteTask($event)" connectedTasks="" cdkDrag />
+      }
+    </div>
+    @if (showTaskTitleInput()) {
+      <form (submit)="addNewTask($event)">
+        <input type="text" #titleInput [field]="newTaskForm.title" class="bg-white rounded-md border border-slate-300 w-full px-2 py-1 mb-2 focus:outline-0 focus:border-sky-800/20 focus:shadow focus:shadow-sky-200" />
+        <button type="submit" [disabled]="newTaskForm().invalid()" class="block bg-sky-800 hover:bg-sky-900 rounded-md text-white text-sm font-medium px-3 py-2 cursor-pointer">Add Task</button>
+      </form>
+    } @else { 
+      <button (click)="setTaskTitleInput(true)" class="cursor-pointer bg-sky-950/10 rounded-lg text-slate-500 font-medium text-sm px-3 py-2 w-full text-start"> 
+        <fa-icon [icon]="faPlus" /> Add Task
+      </button>
+    }
+  </div>
+</div>
