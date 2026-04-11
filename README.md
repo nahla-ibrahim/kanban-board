@@ -1,59 +1,93 @@
-# KanbanBoard
+# 🧩 Kanban Board
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2.
+A modern **Kanban Board web application** to manage tasks efficiently using a simple and intuitive UI.
 
-## Development server
+🚧 **This project is currently under development**
 
-To start a local development server, run:
+---
 
-```bash
+## 📸 Preview
+
+<a href="https://kanban-board-weld-five.vercel.app/"> 🔗 LIVE DEMO </a>
+
+---
+
+## 📌 About The Project
+
+This project is a task management application inspired by Kanban methodology (similar to Trello), where users can:
+
+* Organize tasks into columns
+* Track progress visually
+* Manage workflow easily
+
+The goal is to build a clean, scalable, and real-world project that demonstrates strong frontend skills.
+
+---
+
+## 🚀 Features (Implemented)
+
+* ✅ Create task cards
+* ✅ Display tasks in columns (e.g., To Do, In Progress, Done)
+* ✅ Responsive UI
+* ✅ Clean and reusable components structure
+* ✅ Reorder columns using Drag & Drop
+* ✅ Drag & Drop tasks within and across columns
+* ✅ Edit & delete tasks
+* ✅ Add new columns dynamically
+  
+---
+
+## 🔄 Features In Progress / Planned
+
+
+* ⏳ Edit & Delete Columns
+* ⏳ Add Edit Task Form Fields
+* ⏳ Persist data (LocalStorage / API)
+* ⏳ Authentication (Login / Register)
+* ⏳ Dark mode 🌙
+* ⏳ Better UI/UX improvements
+
+---
+
+## 🛠️ Tech Stack
+
+* **Framework:** Angular
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS
+* **Other Tools:** Git & GitHub
+
+---
+
+## ▶️ Getting Started
+To run the project locally:
+
+bash
+git clone https://github.com/nahla-ibrahim/kanban-board.git
+cd kanban-board
+npm install
 ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Then open:
 
-## Code scaffolding
+bash
+http://localhost:4200
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🎯 Goals
+This project is built to:
 
-```bash
-ng generate --help
-```
+* Practice real-world frontend development
+* Improve problem-solving skills
+* Build a strong portfolio project
 
-## Building
+---
 
-To build the project run:
+## 📬 Contact
 
-```bash
-ng build
-```
+If you have any feedback or suggestions, feel free to reach out!
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+⭐ Don't forget to star the repo if you like it!
