@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { AddNewList } from '../../shared/components/add-new-list/add-new-list';
 import { List } from '../../shared/components/list/list';
 import {
@@ -34,6 +34,17 @@ export interface ListData extends Title {
   styleUrl: './board.css',
 })
 export class Board {
+  constructor() {
+    const savedLists = localStorage.getItem('kanban-lists');
+
+    if (savedLists) {
+      this.lists.set(JSON.parse(savedLists));
+    }
+    effect(() => {
+      localStorage.setItem('kanban-lists', JSON.stringify(this.lists()));
+    });
+  }
+
   defaultLists: ListData[] = [
     {
       id: crypto.randomUUID(),
@@ -97,30 +108,77 @@ export class Board {
   }
 
   updateListData(listData: ListData) {
-    let allLists = this.lists();
-    const selectedListIndex = allLists.findIndex((list) => list.id == listData.id);
-    if (selectedListIndex >= 0) {
-      allLists[selectedListIndex] = listData;
-      this.lists.set(allLists);
-    }
+    this.lists.update((lists) => lists.map((list) => (list.id === listData.id ? listData : list)));
   }
   deleteColumn(columnId: string) {
     this.lists.update((lists) => lists.filter((list) => list.id !== columnId));
   }
 
   drop(event: CdkDragDrop<ListData[]>) {
-    moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
+    const lists = [...this.lists()];
+
+    moveItemInArray(lists, event.previousIndex, event.currentIndex);
+
+    const updatedLists = lists.map((list, index) => ({
+      ...list,
+      order: index + 1,
+    }));
+
+    this.lists.set(updatedLists);
+    console.log(this.lists());
   }
 
   dropTask(event: CdkDragDrop<TaskData[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      event.container.data.forEach((task, index) => {
+        task.order = index + 1;
+      });
+      console.log(event.container.data);
+      this.lists.update((lists) =>
+        lists.map((list) =>
+          list.id === event.container.id
+            ? {
+                ...list,
+                tasks: event.container.data,
+              }
+            : list,
+        ),
+      );
     } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex,
+      );
+      event.previousContainer.data.forEach((task, index) => {
+        task.order = index + 1;
+      });
+
+      event.container.data.forEach((task, index) => {
+        task.order = index + 1;
+      });
+      console.log(event.container.data);
+      console.log(event.previousContainer.data);
+      this.lists.update((lists) =>
+        lists.map((list) => {
+          if (list.id === event.previousContainer.id) {
+            return {
+              ...list,
+              tasks: event.previousContainer.data,
+            };
+          }
+
+          if (list.id === event.container.id) {
+            return {
+              ...list,
+              tasks: event.container.data,
+            };
+          }
+
+          return list;
+        }),
       );
     }
   }

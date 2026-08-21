@@ -129,8 +129,8 @@ export class List {
   cancelEdit() {
     this.editingTitle.set(false);
   }
-  ///////////////////delete list //////////////////
 
+  ///////////////////delete list //////////////////
   deleteList = output<string>();
   deleteColumn() {
     this.deleteList.emit(this.listData().id);
