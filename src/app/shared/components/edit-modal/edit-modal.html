@@ -1,16 +1,136 @@
-<div class="overflow-hidden fixed top-0 right-0 flex justify-center items-center w-screen h-screen bg-gray-900/70">
+<div
+  class="overflow-hidden fixed top-0 right-0 flex justify-center items-center w-screen h-screen bg-gray-900/70"
+>
   <div class="relative p-4 w-full max-w-3xl">
     <div class="relative p-4 bg-white rounded-lg shadow">
-      <button type="button"
-        class="text-gray-400 absolute top-2 right-2 hover:text-gray-900 cursor-pointer"
-        (click)="closeModal()">
+      <button
+        type="button"
+        class="text-gray-400 absolute top-3 right-3 hover:text-gray-900 cursor-pointer text-lg"
+        (click)="closeModal()"
+      >
         <fa-icon [icon]="faClose" />
-        <span class="sr-only">Close modal</span>
       </button>
 
       <div>
-        <h2 class="text-2xl font-medium text-gray-900">{{taskData().title}}</h2>
+        <div class="my-6">
+          <label for="title" class="block mb-2 text-sm font-medium text-gray-900"> Title </label>
+
+          <input
+            id="title"
+            type="text"
+            [field]="editTaskForm.title"
+            class="w-full rounded-lg border border-gray-300 p-2.5"
+          />
+
+          @if (editTaskForm.title().touched() && editTaskForm.title().invalid()) {
+            <p class="mt-1 text-sm text-red-500">
+              {{ editTaskForm.title().errors()[0].message }}
+            </p>
+          }
+        </div>
+        <div class="mb-4">
+          <label for="description" class="block mb-2 text-sm font-medium text-gray-900">
+            Description
+          </label>
+
+          <textarea
+            id="description"
+            rows="3"
+            [field]="editTaskForm.description"
+            class="w-full rounded-lg border border-gray-300 p-2.5"
+          ></textarea>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-2 text-sm font-medium text-gray-900"> Priority </label>
+
+          <div class="flex gap-2">
+            <button
+              type="button"
+              (click)="setPriority('high')"
+              [class.ring-2]="editTask().priority === 'high'"
+              class="px-3 py-2 rounded-lg bg-red-100 text-red-700 cursor-pointer"
+            >
+              High
+            </button>
+
+            <button
+              type="button"
+              (click)="setPriority('medium')"
+              [class.ring-2]="editTask().priority === 'medium'"
+              class="px-3 py-2 rounded-lg bg-yellow-100 text-yellow-700 cursor-pointer"
+            >
+              Medium
+            </button>
+
+            <button
+              type="button"
+              (click)="setPriority('low')"
+              [class.ring-2]="editTask().priority === 'low'"
+              class="px-3 py-2 rounded-lg bg-green-100 text-green-700 cursor-pointer"
+            >
+              Low
+            </button>
+
+            <button
+              type="button"
+              (click)="setPriority(null)"
+              [class.ring-2]="editTask().priority === null"
+              class="px-3 py-2 rounded-lg bg-gray-100 text-gray-700 cursor-pointer"
+            >
+              None
+            </button>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="tag" class="block mb-2 text-sm font-medium text-gray-900"> Tags </label>
+
+          <div class="flex gap-2">
+            <input
+              id="tag"
+              type="text"
+              #tagInput
+              (keydown.enter)="addTag(tagInput)"
+              class="flex-1 rounded-lg border border-gray-300 p-2.5"
+              placeholder="Add a tag"
+            />
+
+            <button
+              type="button"
+              class="px-4 py-2 bg-sky-800 text-white rounded-lg cursor-pointer"
+              (click)="addTag(tagInput)"
+            >
+              Add
+            </button>
+          </div>
+          @if (editTask().tags.length > 0) {
+            <div class="flex flex-wrap gap-2 mt-3">
+              @for (tag of editTask().tags; track tag) {
+                <span
+                  class="relative inline-flex items-center px-3 py-1.5 mr-2 mb-2 text-sm font-medium text-sky-800 bg-sky-100 rounded-full"
+                >
+                  {{ tag }}
+
+                  <button
+                    type="button"
+                    (click)="removeTag(tag)"
+                    class="absolute -top-1.5 -right-1.5 flex items-center justify-center w-4 h-4 rounded-full bg-red-400 text-white text-[8px] leading-none cursor-pointer hover:bg-red-500"
+                    aria-label="Remove {{ tag }}"
+                  >
+                    <fa-icon [icon]="faClose" />
+                  </button>
+                </span>
+              }
+            </div>
+          }
+        </div>
       </div>
+      <button
+        type="button"
+        (click)="save()"
+        class="px-5 py-2.5 bg-sky-800 hover:bg-sky-900 text-white rounded-lg font-medium cursor-pointer"
+      >
+        Save
+      </button>
     </div>
   </div>
 </div>

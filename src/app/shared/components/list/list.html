@@ -1,24 +1,84 @@
 <div class="bg-slate-100 rounded-lg w-60 p-3 cursor-move" (clickOutside)="setTaskTitleInput(false)">
-  <h3 class="text-xl font-semibold">{{listData().title}}</h3>
+  @if (editingTitle()) {
+    <div class="flex items-center gap-2">
+      <input
+        type="text"
+        [value]="title()"
+        (input)="onTitleChange($event)"
+        (keydown.enter)="saveEdit()"
+        class="min-w-0 flex-1 rounded-md border border-slate-300 px-2 py-1"
+      />
+
+      <button type="button" (click)="saveEdit()" class="text-green-600 cursor-pointer">✓</button>
+
+      <button type="button" (click)="cancelEdit()" class="text-red-500 cursor-pointer">✕</button>
+    </div>
+  } @else {
+    <div class="flex items-center justify-between">
+      <h3 class="text-xl font-semibold truncate">
+        {{ listData().title }}
+      </h3>
+
+      <div class="flex gap-2">
+        <button
+          type="button"
+          class="text-sm text-slate-500 hover:text-sky-600 cursor-pointer"
+          (click)="startEdit()"
+        >
+          <fa-icon [icon]="faPen" />
+        </button>
+
+        <app-confirm-btn
+          [icon]="faTrash"
+          message="Are you sure you want to delete this column?"
+          (action)="deleteColumn()"
+          btnClass="text-sm font-extralight cursor-pointer group"
+        >
+          <fa-icon [icon]="faTrash" class="group-hover:text-red-500" />
+        </app-confirm-btn>
+      </div>
+    </div>
+  }
   <div class="mt-4">
     <div
       [id]="listData().id"
       cdkDropList
       [cdkDropListConnectedTo]="this.connectedList()"
       [cdkDropListData]="listData().tasks"
-      (cdkDropListDropped)="dropTask.emit($event)" 
-      class="min-h-3">
-      @for (task of listData().tasks; track $index) {
-        <app-single-task [taskData]="task" (deleteTask)="deleteTask($event)" connectedTasks="" cdkDrag />
+      (cdkDropListDropped)="dropTask.emit($event)"
+      class="min-h-3"
+    >
+      @for (task of listData().tasks; track task.id) {
+        <app-single-task
+          [taskData]="task"
+          (deleteTask)="deleteTask($event)"
+          (updateTask)="updateTask($event)"
+          connectedTasks=""
+          cdkDrag
+        />
       }
     </div>
     @if (showTaskTitleInput()) {
       <form (submit)="addNewTask($event)">
-        <input type="text" #titleInput [field]="newTaskForm.title" class="bg-white rounded-md border border-slate-300 w-full px-2 py-1 mb-2 focus:outline-0 focus:border-sky-800/20 focus:shadow focus:shadow-sky-200" />
-        <button type="submit" [disabled]="newTaskForm().invalid()" class="block bg-sky-800 hover:bg-sky-900 rounded-md text-white text-sm font-medium px-3 py-2 cursor-pointer">Add Task</button>
+        <input
+          type="text"
+          #titleInput
+          [field]="newTaskForm.title"
+          class="bg-white rounded-md border border-slate-300 w-full px-2 py-1 mb-2 focus:outline-0 focus:border-sky-800/20 focus:shadow focus:shadow-sky-200"
+        />
+        <button
+          type="submit"
+          [disabled]="newTaskForm().invalid()"
+          class="block bg-sky-800 hover:bg-sky-900 rounded-md text-white text-sm font-medium px-3 py-2 cursor-pointer disabled:bg-sky-900/50 disabled:cursor-not-allowed"
+        >
+          Add Task
+        </button>
       </form>
-    } @else { 
-      <button (click)="setTaskTitleInput(true)" class="cursor-pointer bg-sky-950/10 rounded-lg text-slate-500 font-medium text-sm px-3 py-2 w-full text-start"> 
+    } @else {
+      <button
+        (click)="setTaskTitleInput(true)"
+        class="cursor-pointer bg-sky-950/10 rounded-lg text-slate-500 font-medium text-sm px-3 py-2 w-full text-start"
+      >
         <fa-icon [icon]="faPlus" /> Add Task
       </button>
     }
