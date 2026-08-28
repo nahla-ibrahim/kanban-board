@@ -1,6 +1,7 @@
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { AddNewList } from '../../shared/components/add-new-list/add-new-list';
 import { List } from '../../shared/components/list/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -92,10 +93,27 @@ export class Board {
     },
   ];
 
+  private snackBar = inject(MatSnackBar);
   lists = signal<ListData[]>(this.defaultLists);
-
   connectedList = computed(() => this.lists().map((list) => list.id));
   addNewList(listTitle: string) {
+    const title = listTitle.trim();
+
+    if (!title) {
+      this.snackBar.open('Column Title Needed', 'Close', {
+        duration: 3000,
+      });
+      return;
+    }
+    const exists = this.lists().some((list) => list.title.toLowerCase() === title.toLowerCase());
+
+    if (exists) {
+      this.snackBar.open('Column name already exists', 'Close', {
+        duration: 3000,
+      });
+
+      return;
+    }
     this.lists.set([
       ...this.lists(),
       {
@@ -105,6 +123,9 @@ export class Board {
         tasks: [],
       },
     ]);
+    this.snackBar.open('Column added successfully', 'Close', {
+      duration: 3000,
+    });
   }
 
   updateListData(listData: ListData) {
@@ -112,6 +133,9 @@ export class Board {
   }
   deleteColumn(columnId: string) {
     this.lists.update((lists) => lists.filter((list) => list.id !== columnId));
+    this.snackBar.open('Column deleted successfully', 'Close', {
+      duration: 3000,
+    });
   }
 
   drop(event: CdkDragDrop<ListData[]>) {

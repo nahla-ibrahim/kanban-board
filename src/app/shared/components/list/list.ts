@@ -1,12 +1,22 @@
-import { Component, effect, ElementRef, input, output, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { ListData, TaskData, Title } from '../../../pages/board/board';
 import { SingleTask } from '../single-task/single-task';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPlus, faTrash, faClose } from '@fortawesome/free-solid-svg-icons';
 import { form, required, Field, submit } from '@angular/forms/signals';
 import { ClickOutsideDirective } from '../../directives/click-outside';
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { ConfirmBtn } from '../confirm-btn/confirm-btn';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-list',
@@ -35,6 +45,7 @@ export class List {
   faPlus = faPlus;
   faPen = faPen;
   faTrash = faTrash;
+  faclose = faClose;
   listData = input.required<ListData>();
   connectedList = input.required<string[]>();
   dropTask = output<CdkDragDrop<TaskData[]>>();
@@ -46,12 +57,31 @@ export class List {
   newTaskForm = form(this.newTask, (schema) => {
     required(schema.title, { message: 'The title of task is required' });
   });
+  private snackBar = inject(MatSnackBar);
 
   addNewTask = (e: Event) => {
     e.preventDefault();
 
     submit(this.newTaskForm, async () => {
+      const title = this.newTask().title.trim();
+
+      if (!title) {
+        this.snackBar.open('Task Title Needed', 'Close', {
+          duration: 3000,
+        });
+        return;
+      }
+
       const currentTasks = this.listData().tasks ?? [];
+      const exists = currentTasks.some((task) => task.title.toLowerCase() === title.toLowerCase());
+
+      if (exists) {
+        this.snackBar.open('Task name already exists', 'Close', {
+          duration: 3000,
+        });
+
+        return;
+      }
       this.updateListData.emit({
         ...this.listData(),
         tasks: [
@@ -68,6 +98,9 @@ export class List {
       });
       this.setTaskTitleInput(false);
       this.newTaskForm().value.set({ title: '' });
+      this.snackBar.open('Task added successfully', 'Close', {
+        duration: 3000,
+      });
     });
   };
 
@@ -95,6 +128,9 @@ export class List {
     this.updateListData.emit({
       ...this.listData(),
       tasks,
+    });
+    this.snackBar.open('Task updated successfully', 'Close', {
+      duration: 3000,
     });
   };
   //////////////// edit list title input //////////////////

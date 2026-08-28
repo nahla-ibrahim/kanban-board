@@ -47,6 +47,12 @@ export class EditModal {
     if (!value) {
       return;
     }
+    const exists = this.editTask().tags.some((tag) => tag.toLowerCase() === value.toLowerCase());
+
+    if (exists) {
+      input.value = '';
+      return;
+    }
 
     this.editTask.update((task) => ({
       ...task,

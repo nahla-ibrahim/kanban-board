@@ -19,7 +19,7 @@
         {{ listData().title }}
       </h3>
 
-      <div class="flex gap-2">
+      <div class="flex gap-2 items-center">
         <button
           type="button"
           class="text-sm text-slate-500 hover:text-sky-600 cursor-pointer"
@@ -32,9 +32,9 @@
           [icon]="faTrash"
           message="Are you sure you want to delete this column?"
           (action)="deleteColumn()"
-          btnClass="text-sm font-extralight cursor-pointer group"
+          btnClass="text-sm text-slate-500 hover:text-sky-600 cursor-pointer group"
         >
-          <fa-icon [icon]="faTrash" class="group-hover:text-red-500" />
+          <fa-icon [icon]="faclose" />
         </app-confirm-btn>
       </div>
     </div>
