@@ -14,6 +14,14 @@ describe('EditModal', () => {
 
     fixture = TestBed.createComponent(EditModal);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('taskData', {
+      id: '1',
+      title: 'Task 1',
+      description: '',
+      priority: null,
+      tags: [],
+      order: 1,
+    });
     await fixture.whenStable();
   });
 

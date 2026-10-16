@@ -14,6 +14,13 @@ describe('List', () => {
 
     fixture = TestBed.createComponent(List);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('listData', {
+      id: '1',
+      title: 'To Do',
+      order: 1,
+      tasks: [],
+    });
+    fixture.componentRef.setInput('connectedList', ['1']);
     await fixture.whenStable();
   });
 
