@@ -8,7 +8,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { ListData, TaskData, Title } from '../../../pages/board/board';
+import { ListData, Result, TaskData, Title } from '../../models/board.model';
 import { SingleTask } from '../single-task/single-task';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPen, faPlus, faTrash, faClose } from '@fortawesome/free-solid-svg-icons';
@@ -17,6 +17,7 @@ import { ClickOutsideDirective } from '../../directives/click-outside';
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { ConfirmBtn } from '../confirm-btn/confirm-btn';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { BoardStore } from '../../services/board-store';
 
 @Component({
   selector: 'app-list',
@@ -49,7 +50,6 @@ export class List {
   listData = input.required<ListData>();
   connectedList = input.required<string[]>();
   dropTask = output<CdkDragDrop<TaskData[]>>();
-  updateListData = output<ListData>();
   showTaskTitleInput = signal<boolean>(false);
   newTask = signal<Title>({
     title: '',
@@ -57,63 +57,30 @@ export class List {
   newTaskForm = form(this.newTask, (schema) => {
     required(schema.title, { message: 'The title of task is required' });
   });
-  private snackBar = inject(MatSnackBar);
+  private readonly store = inject(BoardStore);
+  private readonly snackBar = inject(MatSnackBar);
 
   addNewTask = (e: Event) => {
     e.preventDefault();
 
     submit(this.newTaskForm, async () => {
-      const title = this.newTask().title.trim();
+      const result = this.store.addTask(this.listData().id, this.newTask().title);
 
-      if (!title) {
-        this.snackBar.open('Task Title Needed', 'Close', {
-          duration: 3000,
-        });
-        return;
+      this.notify(result, 'Task added successfully');
+
+      // Keep what the user typed on screen when the title was rejected.
+      if (result.ok) {
+        this.setTaskTitleInput(false);
+        this.newTaskForm().value.set({ title: '' });
       }
-
-      const currentTasks = this.listData().tasks ?? [];
-      const exists = currentTasks.some((task) => task.title.toLowerCase() === title.toLowerCase());
-
-      if (exists) {
-        this.snackBar.open('Task name already exists', 'Close', {
-          duration: 3000,
-        });
-
-        return;
-      }
-      this.updateListData.emit({
-        ...this.listData(),
-        tasks: [
-          ...currentTasks,
-          {
-            id: crypto.randomUUID(),
-            title: this.newTask().title,
-            description: '',
-            priority: null,
-            tags: [],
-            order: currentTasks.length + 1,
-          },
-        ],
-      });
-      this.setTaskTitleInput(false);
-      this.newTaskForm().value.set({ title: '' });
-      this.snackBar.open('Task added successfully', 'Close', {
-        duration: 3000,
-      });
     });
   };
 
   deleteTask(taskId: string) {
-    const tasks = this.listData().tasks;
-    const taskIndex = tasks.findIndex((task) => task.id === taskId);
-    if (taskIndex >= 0) {
-      tasks.splice(taskIndex, 1);
-      this.updateListData.emit({
-        ...this.listData(),
-        tasks: tasks,
-      });
-    }
+    this.store.deleteTask(this.listData().id, taskId);
+    this.snackBar.open('Task deleted successfully', 'Close', {
+      duration: 3000,
+    });
   }
 
   setTaskTitleInput(value: boolean) {
@@ -121,17 +88,7 @@ export class List {
   }
 
   updateTask = (updatedTask: TaskData) => {
-    const tasks = this.listData().tasks.map((task) =>
-      task.id === updatedTask.id ? updatedTask : task,
-    );
-
-    this.updateListData.emit({
-      ...this.listData(),
-      tasks,
-    });
-    this.snackBar.open('Task updated successfully', 'Close', {
-      duration: 3000,
-    });
+    this.notify(this.store.updateTask(this.listData().id, updatedTask), 'Task updated successfully');
   };
   //////////////// edit list title input //////////////////
 
@@ -148,16 +105,12 @@ export class List {
   }
 
   saveEdit() {
-    const title = this.title().trim();
+    const result = this.store.renameList(this.listData().id, this.title());
 
-    if (!title) {
+    if (!result.ok) {
+      this.snackBar.open(result.error, 'Close', { duration: 3000 });
       return;
     }
-
-    this.updateListData.emit({
-      ...this.listData(),
-      title,
-    });
 
     this.editingTitle.set(false);
   }
@@ -167,8 +120,16 @@ export class List {
   }
 
   ///////////////////delete list //////////////////
-  deleteList = output<string>();
   deleteColumn() {
-    this.deleteList.emit(this.listData().id);
+    this.store.deleteList(this.listData().id);
+    this.snackBar.open('Column deleted successfully', 'Close', {
+      duration: 3000,
+    });
+  }
+
+  private notify(result: Result, successMessage: string) {
+    this.snackBar.open(result.ok ? successMessage : result.error, 'Close', {
+      duration: 3000,
+    });
   }
 }

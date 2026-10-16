@@ -1,7 +1,7 @@
-import { Component, effect, input, OnInit, output, signal } from '@angular/core';
+import { Component, effect, input, output, signal } from '@angular/core';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TaskData } from '../../../pages/board/board';
+import { TaskData } from '../../models/board.model';
 import { form, required, Field } from '@angular/forms/signals';
 @Component({
   selector: 'app-edit-modal',

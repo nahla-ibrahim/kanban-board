@@ -1,7 +1,7 @@
 import { Component, effect, ElementRef, output, signal, ViewChild } from '@angular/core';
 import { ClickOutsideDirective } from "../../directives/click-outside";
 import { form, required, Field, submit } from '@angular/forms/signals';
-import { Title } from '../../../pages/board/board';
+import { Title } from '../../models/board.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
