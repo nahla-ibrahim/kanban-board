@@ -7,7 +7,6 @@ import { form, required, Field } from '@angular/forms/signals';
   selector: 'app-edit-modal',
   imports: [FontAwesomeModule, Field],
   templateUrl: './edit-modal.html',
-  styleUrl: './edit-modal.css',
 })
 export class EditModal {
   faClose = faClose;

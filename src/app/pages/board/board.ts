@@ -10,7 +10,6 @@ import { BoardStore } from '../../shared/services/board-store';
   selector: 'app-board',
   imports: [AddNewList, List, CdkDropList, CdkDrag],
   templateUrl: './board.html',
-  styleUrl: './board.css',
 })
 export class Board {
   private readonly store = inject(BoardStore);

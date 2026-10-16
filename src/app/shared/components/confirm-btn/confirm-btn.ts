@@ -5,7 +5,6 @@ import { faClose } from '@fortawesome/free-solid-svg-icons';
   selector: 'app-confirm-btn',
   imports: [FontAwesomeModule],
   templateUrl: './confirm-btn.html',
-  styleUrl: './confirm-btn.css',
 })
 export class ConfirmBtn {
   faClose = faClose;
@@ -17,7 +16,6 @@ export class ConfirmBtn {
   openModal = signal<boolean>(false);
 
   toggleModal = (value: boolean) => {
-    console.log(value);
     this.openModal.set(value);
   }
   

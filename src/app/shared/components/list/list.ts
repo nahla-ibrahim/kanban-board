@@ -31,7 +31,6 @@ import { BoardStore } from '../../services/board-store';
     ConfirmBtn,
   ],
   templateUrl: './list.html',
-  styleUrl: './list.css',
 })
 export class List {
   @ViewChild('titleInput') titleInput?: ElementRef<HTMLInputElement>;

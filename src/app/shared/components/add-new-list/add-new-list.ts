@@ -9,7 +9,6 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
   selector: 'app-add-new-list',
   imports: [ClickOutsideDirective, Field, FontAwesomeModule],
   templateUrl: './add-new-list.html',
-  styleUrl: './add-new-list.css',
 })
 export class AddNewList {  
   @ViewChild('titleInput') titleInput?: ElementRef<HTMLInputElement>;

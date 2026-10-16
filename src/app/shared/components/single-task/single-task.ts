@@ -26,7 +26,6 @@ const TAG_COLORS = [
   selector: 'app-single-task',
   imports: [FontAwesomeModule, ConfirmBtn, EditModal],
   templateUrl: './single-task.html',
-  styleUrl: './single-task.css',
 })
 export class SingleTask {
   faEdit = faEdit;
