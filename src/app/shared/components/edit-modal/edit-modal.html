@@ -1,7 +1,16 @@
+<!-- The card this modal belongs to is a cdkDrag, so the pointer events that start
+     a drag are stopped here. Without it, selecting text in a field drags the card. -->
 <div
   class="overflow-hidden fixed top-0 right-0 flex justify-center items-center w-screen h-screen bg-gray-900/70"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Edit task"
+  (click)="closeModal()"
+  (mousedown)="$event.stopPropagation()"
+  (touchstart)="$event.stopPropagation()"
+  (document:keydown.escape)="closeModal()"
 >
-  <div class="relative p-4 w-full max-w-3xl">
+  <div class="relative p-4 w-full max-w-3xl" (click)="$event.stopPropagation()">
     <div class="relative p-4 bg-white rounded-lg shadow">
       <button
         type="button"

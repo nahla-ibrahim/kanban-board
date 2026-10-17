@@ -3,24 +3,39 @@
 </button>
 
 @if (openModal()) {
-  <div class="overflow-hidden fixed top-0 right-0 flex justify-center items-center w-screen h-screen bg-gray-900/70">
-    <div class="relative p-4 w-full max-w-md">
+  <div
+    class="overflow-hidden fixed top-0 right-0 flex justify-center items-center w-screen h-screen bg-gray-900/70"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="message()"
+    (click)="toggleModal(false)"
+    (mousedown)="$event.stopPropagation()"
+    (touchstart)="$event.stopPropagation()"
+    (document:keydown.escape)="toggleModal(false)"
+  >
+    <div class="relative p-4 w-full max-w-md" (click)="$event.stopPropagation()">
       <div class="relative p-4 text-center bg-white rounded-lg shadow">
-        <button type="button"
+        <button
+          type="button"
           class="text-gray-400 absolute top-2 right-2 hover:text-gray-900 cursor-pointer"
-          (click)="toggleModal(false)">
+          (click)="toggleModal(false)"
+        >
           <fa-icon [icon]="faClose" />
           <span class="sr-only">Close modal</span>
         </button>
         <fa-icon [icon]="icon()" class="text-gray-400 mb-4 mx-auto inline-block text-2xl" />
-        <p class="mb-4 text-gray-500">{{message()}}</p>
+        <p class="mb-4 text-gray-500">{{ message() }}</p>
         <div class="flex justify-center items-center gap-x-4">
-          <button (click)="toggleModal(false)"
-            class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-900 cursor-pointer">
+          <button
+            (click)="toggleModal(false)"
+            class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+          >
             No, cancel
           </button>
-          <button (click)="confirmAction()"
-            class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 cursor-pointer">
+          <button
+            (click)="confirmAction()"
+            class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 cursor-pointer"
+          >
             Yes, I'm sure
           </button>
         </div>

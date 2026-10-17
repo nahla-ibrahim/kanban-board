@@ -11,7 +11,7 @@ import {
 import { ListData, Result, TaskData, Title } from '../../models/board.model';
 import { SingleTask } from '../single-task/single-task';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPen, faPlus, faTrash, faClose } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { form, required, Field, submit } from '@angular/forms/signals';
 import { ClickOutsideDirective } from '../../directives/click-outside';
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
@@ -45,7 +45,6 @@ export class List {
   faPlus = faPlus;
   faPen = faPen;
   faTrash = faTrash;
-  faclose = faClose;
   listData = input.required<ListData>();
   connectedList = input.required<string[]>();
   dropTask = output<CdkDragDrop<TaskData[]>>();
